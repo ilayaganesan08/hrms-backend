@@ -5,7 +5,8 @@ var Taxes={
     taxrate:{type:Number, required:true},
     totaltax:{type:Number, required:true},
     fillingdate:{type:Date, required:true},
-    paymentstatus: { type: Boolean, default:false, required:true, enum:["paid", "due"] },
+    // paymentstatus: { type: Boolean, default:false, required:true},
+    paymentstatus: { type: String, required: true }
 
 }
 

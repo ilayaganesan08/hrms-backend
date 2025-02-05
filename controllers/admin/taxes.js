@@ -3,12 +3,12 @@ const Router = express.Router();
 const mongoose = require('mongoose')
 const DB = require('../../utilities/db');
 const db = require('../../utilities/schemaconnection');
-const { paymentstatus } = require('../../models/taxes');
 
 
 Router.post('/addtax', async function(req, res) {
     try{
         const {taxid, taxtype, taxableamount, taxrate, fillingdate, paymentstatus} = req.body;
+        console.log(paymentstatus)
 
         if(!taxid || !taxtype || !taxableamount || !taxrate || !fillingdate || !paymentstatus){
             console.log(req.body);
@@ -28,7 +28,7 @@ Router.post('/addtax', async function(req, res) {
         const totaltax=taxableamount * (taxrate / 100);
 
         const newTaxes = {
-            taxid, taxtype, taxableamount, taxrate, totaltax, fillingdate, paymentstatus
+            taxid, taxtype, taxableamount, taxrate, totaltax,fillingdate, paymentstatus
         };
 
         DB.InsertDocument('taxes', newTaxes, function (err, result){
@@ -103,11 +103,11 @@ Router.get('/viewtax/:id', async function (req, res) {
     }
 })
 
-Router.get('/updatetax', async function (req, res) {
+Router.post('/updatetax/:id', async function (req, res) {
     
     try{
-        const {id} = id.params;
-        const {taxid, taxtype, taxableamount, taxrate, totaltax, fillingdate, paymentstatus} = req.body;
+        const {id} = req.params;
+        const {taxtype, taxableamount, taxrate, totaltax, fillingdate, paymentstatus} = req.body;
 
         // const results = await db.taxes.findOne({_id: {$ne: id}});
         // if(results){
@@ -117,9 +117,10 @@ Router.get('/updatetax', async function (req, res) {
         //     })
         // }
 
-        const updateTax = {taxid, taxtype, taxableamount, taxrate, totaltax, fillingdate, paymentstatus};
+        const updateTax = {taxtype, taxableamount, taxrate, totaltax, fillingdate, paymentstatus};
 
-        DB.FindUpdateDocument('taxes', {_id: id}, updateTax, function (err, result){
+
+        DB.FindUpdateDocument('taxes', {_id: id}, updateTax, {},  function (err, result){
             if(err){
                 return res.status(400).json({
                     status:0,
